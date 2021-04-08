@@ -1,0 +1,88 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+	border-style: solid;
+	border-color: black;
+	padding: 10px;
+	grid-column-start: 2;
+	border-color: inherit;
+}
+.itemTime {
+	grid-column-start: 1;
+	text-align: right;
+	padding: 10px;
+	border-style: solid;
+	border-width: 3px 0px 3px 3px;
+	border-color: inherit;
+}
+#renderedDta {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 20% 80%;
+	border-color: inherit;
+	grid-row-gap: 10px;
+}
+.classList {
+	width: 550px;
+	display: grid;
+	grid-template-columns: 100%;
+	grid-row-gap: 10px;
+}
+.classListContainer {
+	width: 100%;
+	height: 100%;
+	place-items: center;
+	display: grid;
+}
+.footer {
+	text-align: right;
+	margin: 3px 0px 0px;
+}
+.date {
+	text-align: right;
+	grid-row-start: 2;
+}
+#left, #right, #leftBot, #rightBot, #dateDisplay {
+	cursor: pointer;
+}
+#leftBot {
+	float: left;
+	margin-left: 10px;
+}
+#rightBot {
+	float: right;
+	margin-right: 10px;
+}
+body {
+	display: grid;
+	height: 100vh;
+	width: 100vw;
+	grid-template-rows: auto 20px 30px;
+}
+p {
+	margin: 0px;
+}
+html {
+	font-family: "Menlo", "Meslo LG", monospace;
+	background-color: rgb(33, 33, 33);
+	color: #ccc;
+	border-color: #ccc;
+}
+.footer {
+	margin-right: 10px;
+}
+.msgs {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	place-items: center;
+	grid-column-start: 1;
+	grid-column-end: 3;
+}
+#msg {
+	opacity: 0%;
+	transition-duration: 0.5s
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>timetable</title>
+	<link href="css/compass.css" rel="stylesheet">
+</head>
+<body>
+	<div class="classListContainer">
+		<div class="classList">
+			<div id="renderedDta">
+				<% sortedData.map((value, index) => { %>
+					<div class="itemTime">
+						<% if(value.time != "all day") { %>
+							<p><%=value.time%></p>
+						<% } else { %>
+							<p>all day</p>
+						<% } %>
+					</div>
+					<div class="item">
+						<p><%=value.name%></p>
+					</div>
+				<% }) %>
+			</div>
+			<div class="date">
+				<p><span id="left">< </span><span id="dateDisplay"><%=date%></span><span id="right"> ></span></p>
+			</div>
+			<div class="msgs">
+				<p id="msg">updating....</p>
+			</div>
+		</div>
+	</div>
+	<div class="bottomControls">
+		<p><span id="leftBot">  <</span></p><p><span id="rightBot">>  </span></p>
+	</div>
+	<div class="footer">
+		<p>Compass client | webclient | made by Liam Brett-Hampton</p>
+	</div>
+	<script>
+		// let currentDate = <%=date%> bruh ejs doesnt embed type it embeds a raw string wtfff
+		// ah it makes sense because its not meant to be used like this.
+		let currentDate = "<%=date%>"
+	</script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/expanison.js"></script>
+</body>
+</html>

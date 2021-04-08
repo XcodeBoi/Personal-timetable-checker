@@ -125,7 +125,7 @@ async function dataFetch(date, clientID) {
 }
 
 app.get("/", async (req, res) => { // async is written in because I need await to set the varible
-	let date = "2021-03-29" // new Date().toISOString().split("T")[0] // it is unfathomable how long it took me to find .toISOString()
+	let date = new Date().toISOString().split("T")[0] // it is unfathomable how long it took me to find .toISOString()
 	console.log("------------------------")
 	sortedData = await dataFetch(date, "")
 	res.render("newIndex.ejs", { sortedData: sortedData, date: date})

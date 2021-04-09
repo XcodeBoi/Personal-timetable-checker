@@ -1,9 +1,11 @@
 
 // todo
+// convert server utc to aest
 // client side data rendering
 // restyling
 // fix global scope varible
 // month view?
+// email selina if she has an idea about removing line
 
 fetch = require("node-fetch"); // using node fetch because chrome dev tools can generate formatting for it
 const express = require("express");

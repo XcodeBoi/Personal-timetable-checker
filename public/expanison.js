@@ -11,14 +11,16 @@ try {
 	tempNode[tempNode.length - 1].style.borderBottomStyle = "none"
 	tempNode[tempNode.length - 2].style.borderBottomStyle = "none"
 } catch(e) {console.log("No data to restyle."); /* console.log(e); */ }
+if(document.querySelector("#renderedDta").children.length == 0) {
+	document.querySelector("#date").style.textAlign = "center"
+} else { document.querySelector("#date").style.textAlign = "right" }
 
 // on update
 const observer = new MutationObserver(() => {
-	console.log("run")
 	if(document.querySelector("#renderedDta").children.length == 0) {
 		document.querySelector("#date").style.textAlign = "center"
 	} else { document.querySelector("#date").style.textAlign = "right" }
-}) // bro... negative list indexs dont work? 
+}) 
 observer.observe(document.querySelector("#renderedDta"), {childList: true, attributes: true, subtree: true})
 
 
@@ -57,17 +59,10 @@ socket.on("updatedData", data => {
 	
 	// handling of rendering new data
 	// removing current data
-	try {
-		let tempNode = document.querySelector("#renderedDta").children
-		for(i in tempNode) {
-			tempNode[tempNode.length - 1].remove();
-		}
-		tempNode[tempNode.length - 1].remove(); // two more cycles are needed. 
-		tempNode[tempNode.length - 1].remove();
-	} catch(e) { console.log("No data to remove."); /* console.log(e); */ }
+	document.querySelector("#renderedDta").querySelectorAll('*').forEach(value => value.remove())
 	// rendering new data
 	for(i in data.newData) {
-		console.log("execute")
+		console.log("yeah")
 		let itemTime = document.createElement("div")
 		itemTime.classList.add("itemTime")
 		itemTime.appendChild(document.createTextNode(data.newData[i].time))
@@ -82,7 +77,7 @@ socket.on("updatedData", data => {
 		let tempNode = document.querySelector("#renderedDta").children
 		tempNode[tempNode.length - 1].style.borderBottomStyle = "none"
 		tempNode[tempNode.length - 2].style.borderBottomStyle = "none"
-	} catch(e) {console.log("No data to restyle."); /* console.log(e); */ }
+	} catch(e) { /* console.log("No data to restyle."); console.log(e); */ }
 	
 	// signify completion of data update
 	document.getElementById("msg").style.opacity = "0%"

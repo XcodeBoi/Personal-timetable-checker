@@ -1,11 +1,6 @@
-
+ 
 // todo
-// convert server utc to aest
-// client side data rendering
-// restyling
-// fix global scope varible
-// month view?
-// email selina if she has an idea about removing line
+// client side data rendering fixing
 
 fetch = require("node-fetch"); // using node fetch because chrome dev tools can generate formatting for it
 const express = require("express");
@@ -13,67 +8,11 @@ const app = express();
 const path = require("path");
 const socketio = require("socket.io");
 
-let periodCache = ""
-// I didnt know how to fix this so i put it in the global scope.
-// multiple people updating at the same time will cause huggeee issues
-
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-function time(data) { // this may be my first time not using arrow functions
-	try {
-		let raegraeg = data.longTitle.split(":") // I slammed my keyboard with my hand to get that varible name
-		return `${raegraeg[0]}:${raegraeg[1]}`
-	}
-	catch {
-		return "all day"
-	}
-}
-
-function timeUTC(utc) {
-	try {
-		let raegraeg = new Date(utc).toLocaleTimeString()
-		return `${raegraeg.split(":")[0]}:${raegraeg.split(":")[1]} ${raegraeg.split(":")[2].split(" ")[1]}`
-	}
-	catch {
-		return "all day"
-	}
-}
-
-function teacherGet(periodCache, list) {
-	if(periodCache > 99) { return null } else {
-		let newList = []
-		let completeString = ""
-		let tempList = []
-		// let tempList = list.map((value, index) => {console.log(value + index); if(index > 5){return value}})
-		for(i in list) {
-			if(i > 5){tempList.push(list[i])}
-		}
-		try {
-			if(tempList.length > 1){newList[0] = tempList[0].split(">")[1].split("<")[0]; newList[1] = tempList[1]}
-			else { newList[0] =  tempList[0] }
-		}
-		catch {
-			newList[0] = " "
-		}
-		for(i in newList){
-			completeString = completeString + newList[i]
-		}
-		return completeString
-	}
-}
-
-function periodCheck(periodData, i) {
-	if(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(periodData) != true) {periodCache = (parseInt(i) + 100).toString(); return periodCache} else { periodCache = periodData; return periodCache }
-}
-
-function locationChk(periodData, locationData) {
-	if(parseInt(periodData) > 99) { return null } else { return locationData }
-}
-
-// async is written in because I need await to set the varible
-async function dataFetch(date, clientID) { 
-	let classesUnordered = []
+async function dataFetch(date, clientID) {
+	// fetch data from api
 	let fetch_data = await fetch(process.env.fetchAddress, {
 	  "headers": {
 	    "accept": "*/*",
@@ -90,8 +29,51 @@ async function dataFetch(date, clientID) {
 	  "body": `{\"userId\":2959,\"startDate\":\"${date}\",\"endDate\":\"${date}\",\"page\":1,\"start\":0,\"limit\":150}`,
 	  "method": "POST",
 	  "mode": "cors"
-	}).then(res => res.json())
-	function dataMutated(res) {
+	}).then(res => res.json()) // parsing data
+	console.log(fetch_data)
+	// instance based variable declaration
+	let classesUnordered = []
+	let periodCache = ""
+	let teacherCache = undefined
+
+	// data processing functions
+	function timeUTC(utc) {
+		try { // catch if the event has no associated time
+			let raegraeg = new Date(utc).toLocaleTimeString("en-US", { timeZone: "Australia/Melbourne" })
+			// custom processing of data to present in readable format
+			return `${raegraeg.split(":")[0]}:${raegraeg.split(":")[1]} ${raegraeg.split(":")[2].split(" ")[1]}`
+		}
+		catch(e) {
+			return "all day"
+		}
+	}
+	function teacherGet(periodCache, list) {
+		// ignore if its not regular class
+		if(periodCache > 99) { return null } else {
+			let tempList = []
+			// extract data associated with teacher
+			for(i in list) {
+				if(i > 5){tempList.push(list[i])}
+			}
+			if(tempList.length == 0){ teacherCache = undefined; return null; } // no teacher
+			if(tempList.length == 1){ teacherCache = undefined; return tempList[0]; } // regular teacher
+			if(tempList.length == 2){ teacherCache = tempList[0].split(">")[1].split("<")[0]; return tempList[1]; } // CRT
+		}
+	}
+	function periodCheck(periodData, i) {
+		// check if regular period
+		if(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(periodData) != true) {
+			// indication of non regular periods is done through periods over 100. This is bad but easy.
+			return (parseInt(i) + 100).toString()
+		} else { return periodData }
+	}
+	function locationChk(periodData, locationData) {
+		// remove location data for abnormal events
+		if(parseInt(periodData) > 99) { return null } else { return locationData }
+	}
+
+	// modifying data
+	function dataSort(res) {
 		for(i in res.d) {
 			classesUnordered.push({
 				// 4 - 10MATM1 - AU.04B - <strike>BKA</strike>&nbsp; 02CRT
@@ -99,7 +81,8 @@ async function dataFetch(date, clientID) {
 				"time": timeUTC(res.d[i].start),
 				"period": periodCheck(res.d[i].longTitleWithoutTime.split(" ")[0], i),
 				"location": locationChk(periodCache, res.d[i].longTitleWithoutTime.split(" ")[4]),
-				"teacher": teacherGet(periodCache, res.d[i].longTitleWithoutTime.split(" "))
+				"teacher": teacherGet(periodCache, res.d[i].longTitleWithoutTime.split(" ")),
+				"CRT": teacherCache
 			})
 		}
 		let cyclePass = [false]
@@ -119,15 +102,14 @@ async function dataFetch(date, clientID) {
 		}
 		return classesUnordered
 	}
-	let result = dataMutated(fetch_data)
-	 // if you exectute the function more than once in this scope the dataset doubles
-	 // a funky quirk of my poor programming and bad practices.
-	 // also gave me a hard time trying to debug.
-	return result 
+
+	// return data to front end processing
+	return dataSort(fetch_data) 
 }
 
 app.get("/", async (req, res) => { // async is written in because I need await to set the varible
-	let date = new Date().toISOString().split("T")[0] // it is unfathomable how long it took me to find .toISOString()
+	let dateSplit = new Date().toLocaleDateString({ timeZone: "Australia/Melbourne"}).split("/")
+	let date = "2021-04-01" // new Date(parseInt(dateSplit[2]), parseInt(dateSplit[0]) - 1, parseInt(dateSplit[1]) + 1, 0, 0, 0).toISOString().split("T")[0]
 	console.log("------------------------")
 	sortedData = await dataFetch(date, "")
 	res.render("newIndex.ejs", { sortedData: sortedData, date: date})
@@ -141,7 +123,6 @@ const io = socketio(server)
 
 io.on("connection", socket => {
     console.log("connection")
-
     socket.on("dateChange", async data => {
     	if(data.dateChange == "increase") {
     		let initDate = new Date(data.date)

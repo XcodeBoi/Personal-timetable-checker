@@ -10,14 +10,20 @@
 			<div id="renderedDta">
 				<% sortedData.map((value, index) => { %>
 					<div class="itemTime">
-						<% if(value.time != "all day") { %>
-							<p><%=value.time%></p>
-						<% } else { %>
-							<p>all day</p>
-						<% } %>
+						<p><%=value.time%></p>
 					</div>
 					<div class="item">
-						<p><%=value.name%></p>
+						<p><%=value.name%><% if(value.location != null) { %>
+								 - <%= value.location %>
+							<% } %>
+							<% if(value.teacher != null) { %>
+								<% if(value.CRT != undefined) { %>
+									- <s><%= value.teacher %></s> <%= value.CRT %>
+								<% } else { %>
+									 - <%= value.teacher %>
+								<% } %>
+							<% } %>
+						</p>
 					</div>
 				<% }) %>
 			</div>

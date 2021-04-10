@@ -9,6 +9,17 @@ The maintainability of server side and client side rendering combined, vs a sing
 I think I will tinker with setting the colours of grid gutters to act as borders.
 
 
+It is 3:30am, and I have done the very thing I swore to destroy. I have abandoned any notation of maintainability for the sake of convenience, I have become as terrible as the full stack dev at compass. I have used part of a string as an identifier for type. This atrocity is of a similar class to embedding html4 tags into data strings. If somebody must do what I have done to compass to I, they will have almost as hard a time. The cleanliness has been obliterated; an era of low maintainability has been entered. Though today is the final day, so I think it is okay.
+
+implementing features after the control flow of the program has already been determined of a whim is difficult. At the moment I am trying to fix CRT registration in the front end view, and its proving difficult because of both the way the object is constructed and the flow of the teacher checking function. Its convoluted and some instance dependent variables reside in the global scope, an inherently terrible thing to do and particularly so in a real time webpage that serves more than one client at a time. Fixing this would involve redesigning the control flow of most of the program, and I don't want to do that. In future I will likely predetermine the control flow on a diagram before implementing an improvised one on a whim. Working with instance-based data sets in real time requires you to be a little more careful with scope and the complexity of the data processing code is outrageous
+
+"Why is the CRT handling such a mess??"
+Dealing with both pre defined scope and control flow while implementing a new feature was... complicated. Considering this project will be hosted on heroku and only used by me, I am not bothered with efficiency and multi user reliability. its also my school timetable, not going to kill anybody if it messes up. It also won't charge me through the nose for it because its heroku. You have a predefined amount of bandwidth and whatever else to your instance, so its pay $10 and be throttled.
+
+The final steps of this project caused maintainability, future feature implementation and scalability highly problematic. It is unfortunate, but I am lazy and have three other websites I must finish in the next week or so.
+
+On reflection, this code looks like my head wasnt functioning. I should stop writing code at at 2 in the morning.
+
 Heres some extracted comments: 
 
 https://docs.microsoft.com/en-us/dotnet/api/system.web.sessionstate.httpsessionstate.sessionid?view=netframework-4.8

@@ -1,6 +1,7 @@
  
 // todo
-// client side data rendering fixing
+// weird teacher bug
+// client side data rendering
 
 fetch = require("node-fetch"); // using node fetch because chrome dev tools can generate formatting for it
 const express = require("express");

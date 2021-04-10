@@ -2,7 +2,6 @@
 
 const socket = io();
 
-
 // auto css control 
 
 // on load

@@ -133,6 +133,10 @@ io.on("connection", socket => {
     		let initDate = new Date(data.date)
     		initDate.setDate(initDate.getDate() - 1)
     		socket.emit("updatedData", { newData: await dataFetch(initDate.toISOString().split("T")[0], ""), newDate: initDate })
-    	} else { console.log(data) }
+    	} 
+    	else if(data.dateChange == "today") {
+    		let initDate = new Date(data.date)
+    		socket.emit("updatedData", { newData: await dataFetch(initDate.toISOString().split("T")[0], ""), newDate: initDate })
+    	}else { console.log(data) }
         })
 })

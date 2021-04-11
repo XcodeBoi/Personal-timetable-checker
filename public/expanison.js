@@ -42,7 +42,7 @@ document.getElementById("rightBot").addEventListener("click", () => {
 	document.getElementById("msg").style.opacity = "100%"
 });
 document.getElementById("dateDisplay").addEventListener("click", () => {
-	socket.emit("dateChange", { dateChange: "increase", date: new Date() })
+	socket.emit("dateChange", { dateChange: "today", date: new Date() })
 	document.getElementById("msg").style.opacity = "100%"
 });
 

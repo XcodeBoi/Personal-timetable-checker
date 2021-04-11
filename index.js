@@ -31,7 +31,6 @@ async function dataFetch(date, clientID) {
 	  "method": "POST",
 	  "mode": "cors"
 	}).then(res => res.json()) // parsing data
-	console.log(fetch_data)
 	// instance based variable declaration
 	let classesUnordered = []
 	let periodCache = ""
@@ -65,7 +64,7 @@ async function dataFetch(date, clientID) {
 		// check if regular period
 		if(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(periodData) != true) {
 			// indication of non regular periods is done through periods over 100. This is bad but easy.
-			return (parseInt(i) + 100).toString()
+			periodCache = (parseInt(i) + 100).toString(); return periodCache;
 		} else { return periodData }
 	}
 	function locationChk(periodData, locationData) {

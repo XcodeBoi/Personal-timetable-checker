@@ -18,7 +18,7 @@
 							<% } %>
 							<% if(value.teacher != null) { %>
 								<% if(value.CRT != undefined) { %>
-									- <s><%= value.teacher %></s> <%= value.CRT %>
+									- <s><%= value.CRT %></s> <%= value.teacher %>
 								<% } else { %>
 									 - <%= value.teacher %>
 								<% } %>
@@ -39,7 +39,7 @@
 		<p><span id="leftBot">  <</span></p><p><span id="rightBot">>  </span></p>
 	</div>
 	<div class="footer">
-		<p>Compass client | webclient | made by Liam B</p>
+		<p>webclient | made by Liam B</p>
 	</div>
 	<script>
 		// let currentDate = <%=date%> bruh ejs doesnt embed type it embeds a raw string wtfff

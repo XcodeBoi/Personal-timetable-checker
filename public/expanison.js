@@ -50,8 +50,6 @@ document.getElementById("dateDisplay").addEventListener("click", () => {
 // incoming data control
 
 socket.on("updatedData", data => {
-	console.log(data)
-
 	// handling of date related data
 	currentDate = data.newDate
 	document.getElementById("dateDisplay").innerHTML = new Date(currentDate).toISOString().split("T")[0]
@@ -59,15 +57,34 @@ socket.on("updatedData", data => {
 	// handling of rendering new data
 	// removing current data
 	document.querySelector("#renderedDta").querySelectorAll('*').forEach(value => value.remove())
-	// rendering new data
+	// rendering new data (i hate this code)
 	for(i in data.newData) {
-		console.log("yeah")
+		let normalTeacher = ""
 		let itemTime = document.createElement("div")
+		let item = document.createElement("div")
+		let teacherSpan = document.createElement("span")
+
 		itemTime.classList.add("itemTime")
 		itemTime.appendChild(document.createTextNode(data.newData[i].time))
-		let item = document.createElement("div")
+
+		classDataTitle = data.newData[i].name
+
+		if(data.newData[i].location != null) { classDataTitle = classDataTitle + " - " + data.newData[i].location}
+		
+		if(data.newData[i].teacher != null) {
+			teacherSpan.appendChild(document.createTextNode(" - "))
+			if(data.newData[i].CRT != undefined) {
+				let crossSpan = document.createElement("s")
+				crossSpan.appendChild(document.createTextNode(data.newData[i].CRT))
+				teacherSpan.appendChild(crossSpan)
+				teacherSpan.appendChild(document.createTextNode(" " + data.newData[i].teacher))
+			} else { teacherSpan.appendChild(document.createTextNode(data.newData[i].teacher)) }
+		}
+
 		item.classList.add("item")
-		item.appendChild(document.createTextNode(data.newData[i].name))
+		item.appendChild(document.createTextNode(classDataTitle))
+		item.appendChild(teacherSpan)
+
 		document.querySelector("#renderedDta").appendChild(itemTime)
 		document.querySelector("#renderedDta").appendChild(item)
 	}

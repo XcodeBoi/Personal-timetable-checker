@@ -1,7 +1,3 @@
- 
-// todo
-// weird teacher bug
-// client side data rendering
 
 fetch = require("node-fetch"); // using node fetch because chrome dev tools can generate formatting for it
 const express = require("express");
@@ -11,6 +7,12 @@ const socketio = require("socket.io");
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
+httpsOptions = {
+	cert: fs.readFileSync("./ssl/back_textedit_dev.crt"),
+	ca: fs.readFileSync("./ssl/back_textedit_dev.ca-bundle"),
+	key: fs.readFileSync("./ssl/back_textedit_dev.key")
+}
 
 async function dataFetch(date, clientID) {
 	// fetch data from api
@@ -115,11 +117,10 @@ app.get("/", async (req, res) => { // async is written in because I need await t
 	res.render("newIndex.ejs", { sortedData: sortedData, date: date})
 })
 
-const server = app.listen(process.env.PORT || 3000, () => {
-  console.log("server started on port 3000");
-});
+const httpsServer = https.createServer(httpsOptions, app)
+httpsServer.listen(50500, "0.0.0.0", () => console.log("listening 50500"))
 
-const io = socketio(server)
+const io = socketio(httpsServer)
 
 io.on("connection", socket => {
     console.log("connection")

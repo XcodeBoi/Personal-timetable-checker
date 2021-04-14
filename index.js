@@ -16,6 +16,13 @@ httpsOptions = {
 	key: fs.readFileSync("./ssl/back_textedit_dev.key")
 }
 
+app.use((req, res, next) => {
+	if(req.protocol === "http") {
+		res.redirect(301, `https://${req.headers.host}${req.url}`)
+	}
+	next()
+})
+
 async function dataFetch(date, clientID) {
 	// fetch data from api
 	let fetch_data = await fetch(process.env.fetchAddress, {

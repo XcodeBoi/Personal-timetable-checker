@@ -100,7 +100,7 @@ async function dataFetch(date, clientID) {
 					else {
 						cyclePass.push(true)
 					}
-				}catch{}
+				}catch(e){}
 			}
 		}
 		return classesUnordered
